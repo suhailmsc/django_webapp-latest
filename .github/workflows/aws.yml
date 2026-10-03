@@ -71,11 +71,7 @@ jobs:
 
           echo "Running new container..."
 
-          docker run -d \
-            --name web2 \
-            -p 80:8000 \
-            794038243291.dkr.ecr.us-east-1.amazonaws.com/django_web-latest:latest
-
+          
           echo "Checking container..."
 
           docker ps

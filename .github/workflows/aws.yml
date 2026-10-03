@@ -66,7 +66,7 @@ jobs:
           echo "Pulling Django image..."
 
           docker pull \
-            794038243291.dkr.ecr.us-east-1.amazonaws.com/django_web-latest:latest
+            794038243291.dkr.ecr.us-east-1.amazonaws.com/django_webapp-latest:latest
 
 
           echo "Running new container..."

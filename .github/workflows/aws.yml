@@ -66,9 +66,12 @@ jobs:
           echo "Pulling Django image..."
 
           docker pull \
-            794038243291.dkr.ecr.us-east-1.amazonaws.com/django_webapp-latest:latest
+            794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
 
+          docker images
 
+          echo "docker images"
+          docker run -d --name web01 -p 3000:8000 djanog_webapp-main:latest
           echo "Running new container..."
 
           

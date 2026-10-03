@@ -68,13 +68,6 @@ jobs:
           docker pull \
             794038243291.dkr.ecr.us-east-1.amazonaws.com/django_web-latest:latest
 
-          echo "Stopping old container..."
-
-          docker stop web2 || true
-
-          echo "Removing old container..."
-
-          docker rm web2 || true
 
           echo "Running new container..."
 

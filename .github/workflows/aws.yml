@@ -28,7 +28,7 @@ name: CI/CD Django Deployment
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:

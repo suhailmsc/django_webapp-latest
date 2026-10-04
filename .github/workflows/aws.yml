@@ -51,6 +51,8 @@ jobs:
 
             echo "Connected to EC2"
 
+            sudo -i
+
             echo "Logging in to ECR..."
 
             aws ecr get-login-password --region us-east-1 | \

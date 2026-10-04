@@ -1,59 +1,40 @@
-```yaml
+---
 name: CI/CD Django Deployment
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-
-      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # 2. Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      # 3. Login to Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
-
-      # 4. Build Docker image
       - name: Build Docker image
         run: |
           docker build -t djanog_webapp-main:latest .
-
-      # 5. Tag Docker image
       - name: Tag Docker image
-        run: |
+        run: >
           docker tag \
             djanog_webapp-main:latest \
             794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
-
-      # 6. Push Docker image to ECR
       - name: Push image to ECR
-        run: |
+        run: >
           docker push \
             794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
-
-      # 7. Create SSH key from GitHub Secret
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/kopix.pem
           chmod 600 ~/.ssh/kopix.pem
-
-      # 8. Test SSH connection
       - name: Test SSH Connection
         run: |
           ssh -o StrictHostKeyChecking=no \
@@ -61,8 +42,6 @@ jobs:
             -i ~/.ssh/kopix.pem \
             ec2-user@${{ secrets.EC2_HOST }} \
             "echo 'SSH connection successful'; whoami; hostname"
-
-      # 9. Deploy to Red Hat EC2
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no \
@@ -107,10 +86,7 @@ jobs:
             echo "Deployment completed!"
 
           EOF
-
-      # 10. Remove SSH key
       - name: Remove SSH Key
         if: always()
         run: |
           rm -f ~/.ssh/kopix.pem
-```

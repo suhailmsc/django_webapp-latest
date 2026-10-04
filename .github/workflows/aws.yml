@@ -39,26 +39,37 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/kopix.pem
           chmod 600 ~/.ssh/kopix.pem
-
-      # 2. Deploy to Red Hat EC2 via SSH
       - name: SSH into EC2 and Deploy
-        run: |
+        run: >
           ssh -o StrictHostKeyChecking=no \
+
           -i ~/.ssh/kopix.pem \
+
           ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
 
+
           echo "Logging in to ECR..."
+
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-        echo "Pulling latest image..."
-        sudo docker pull ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
 
-        echo "Stopping old container..."
-        sudo docker stop web2 || true
+          echo "Pulling latest image..."
 
-        echo "Removing old container..."
-        sudo docker rm web2 || true
+          sudo docker pull ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
 
-        echo "Starting new container..."
-        sudo docker run -d -p 80:8000 --name web2 ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
-        EOF
+
+          echo "Stopping old container..."
+
+          sudo docker stop web2 || true
+
+
+          echo "Removing old container..."
+
+          sudo docker rm web2 || true
+
+
+          echo "Starting new container..."
+
+          sudo docker run -d -p 80:8000 --name web2 ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+
+          EOF

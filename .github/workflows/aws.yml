@@ -98,7 +98,7 @@ jobs:
           echo "Starting new container..."
 
           docker run -d \
-            --name web2 \
+            --name webapp \
             -p 80:8000 \
             ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
 

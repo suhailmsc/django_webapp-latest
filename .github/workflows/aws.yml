@@ -65,7 +65,7 @@ jobs:
 
             echo "Logging in to ECR..."
 
-            sudo -i
+            
 
             aws ecr get-login-password --region us-east-1 | \
             docker login \
@@ -75,20 +75,16 @@ jobs:
 
             echo "Pulling latest image..."
 
-            docker pull \
+            sudo docker pull \
             ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
 
             echo "Stopping old container..."
 
-            docker stop web2 || true
-
-            echo "Removing old container..."
-
-            docker rm web2 || true
+            sudo docker rm web2 || true
 
             echo "Starting new container..."
 
-            docker run -d \
+            sudo docker run -d \
               --name web2 \
               -p 3000:8000 \
               ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest

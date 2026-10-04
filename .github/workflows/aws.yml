@@ -34,45 +34,31 @@ jobs:
         run: |
           docker push \
           794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
-      - name: Setup SSH
-        run: >
-          
-          # Create SSH key from GitHub Secret 
-          - name: Setup SSH Key run: | 
-          echo "${{ secrets.EC2_SSH_KEY }}" > kopix.pem   
-          chmod 600 kopix.pem
-          
-          # Connect to Red Hat EC2 
-          - name: SSH into EC2 
-          run: | 
-          ssh -o StrictHostKeyChecking=no \ 
-          -i kopix.pem \ 
-          ec2-user@ec2-18-233-10-163.compute-1.amazonaws.com \ 
-          "whoami && hostname && cat /etc/redhat-release
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/kopix.pem
+          chmod 600 ~/.ssh/kopix.pem
 
+      # 2. Deploy to Red Hat EC2 via SSH
+      - name: SSH into EC2 and Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+          -i ~/.ssh/kopix.pem \
+          ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
 
-           aws ecr get-login-password --region us-east-1 | \
-           docker login \
-           --username AWS \
-           --password-stdin \
-           ${{ secrets.ECR_REGISTRY }}
+          echo "Logging in to ECR..."
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-           echo "Pulling latest image..."
+        echo "Pulling latest image..."
+        sudo docker pull ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
 
-           sudo docker pull \
-           ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+        echo "Stopping old container..."
+        sudo docker stop web2 || true
 
-           echo "Stopping old container..."
+        echo "Removing old container..."
+        sudo docker rm web2 || true
 
-           sudo docker rm web2 || true
-
-           echo "Starting new container..."
-
-           sudo docker run -d \
-             --name web2 \
-             -p 3000:8000 \
-             ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
-
-           echo "Deployment completed!"
-
-          EOF
+        echo "Starting new container..."
+        sudo docker run -d -p 80:8000 --name web2 ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+        EOF

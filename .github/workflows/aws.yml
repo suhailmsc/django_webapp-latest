@@ -79,18 +79,11 @@ jobs:
           # Login to ECR
           echo "Logging in to ECR..."
 
-          aws ecr get-login-password --region us-east-1 | \
-            docker login \
-            --username AWS \
-            --password-stdin \
-            ${{ secrets.ECR_REGISTRY }}
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 794038243291.dkr.ecr.us-east-1.amazonaws.com
 
           # Pull latest Docker image
           echo "Pulling latest image..."
-
-          docker pull \
-            ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
-
+          docker pull 794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
           # Stop old container
           echo "Stopping old container..."
 

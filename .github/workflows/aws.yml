@@ -52,21 +52,13 @@ jobs:
       # 7. Create SSH key
       - name: Setup SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/kopix.pem
-          chmod 400 ~/.ssh/kopix.pem
+           ssh -i $"{{ secrets.EC2_SSH_KEY }}" ec2-user@ec2-18-233-10-163.compute-1.amazonaws.com
 
-      # 8. Deploy to Red Hat EC2
-      - name: Deploy to Red Hat EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-            -i ~/.ssh/kopix.pem \
-            ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+           sudo -i
+         
 
-            echo "Logging in to ECR..."
 
-            
-
+        
             aws ecr get-login-password --region us-east-1 | \
             docker login \
             --username AWS \

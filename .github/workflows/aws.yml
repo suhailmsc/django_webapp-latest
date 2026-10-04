@@ -38,6 +38,18 @@ jobs:
         run: >
           ssh -i ${{ secrets.EC2_SSH_KEY }}
           ec2-user@ec2-18-233-10-163.compute-1.amazonaws.com
+          # Create SSH key from GitHub Secret 
+          - name: Setup SSH Key run: | 
+          echo "${{ secrets.EC2_SSH_KEY }}" > kopix.pem   
+          chmod 600 kopix.pem
+          
+          # Connect to Red Hat EC2 
+          - name: SSH into EC2 
+          run: | 
+          ssh -o StrictHostKeyChecking=no \ 
+          -i kopix.pem \ 
+          ec2-user@ec2-18-233-10-163.compute-1.amazonaws.com \ 
+          "whoami && hostname && cat /etc/redhat-release"
 
 
           sudo -i

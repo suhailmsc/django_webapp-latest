@@ -100,7 +100,7 @@ jobs:
           docker run -d \
             --name web2 \
             -p 3000:8000 \
-            ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+            794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
 
           # Check container
           echo "Docker containers:"

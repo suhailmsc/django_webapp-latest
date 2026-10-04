@@ -33,11 +33,7 @@ jobs:
         run: |
           docker build -t djanog_webapp-main:latest .
 
-      # 5. Tag image
-      - name: Tag Docker image
-        run: |
-          docker tag djanog_webapp-main:latest \
-          ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+    
 
       # 6. Push image to ECR
       - name: Push image to ECR

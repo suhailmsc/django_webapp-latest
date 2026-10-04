@@ -17,7 +17,7 @@ jobs:
 
       - name: Get Root Access
         run: |
-          sudo -i bash -c '
+          sudo -i 
             whoami
 
       # 2. Configure AWS

@@ -41,7 +41,7 @@ jobs:
           chmod 600 ~/.ssh/kopix.pem
       - name: SSH into EC2 and Deploy
         run: >
-          ssh -o StrictHostKeyChecking=no \
+          ssh -i StrictHostKeyChecking=no \
 
           -i ~/.ssh/kopix.pem \
 

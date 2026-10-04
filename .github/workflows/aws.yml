@@ -44,7 +44,7 @@ jobs:
       - name: Push image to ECR
         run: |
           docker push \
-          ${{ secrets.ECR_REGISTRY }}/djanog_webapp-main:latest
+          794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
 
       # 7. Create SSH key
       - name: Setup SSH

@@ -36,7 +36,7 @@ jobs:
           794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
       - name: Setup SSH
         run: >
-          ssh -i $"{{ secrets.EC2_SSH_KEY }}"
+          ssh -i ${{ secrets.EC2_SSH_KEY }}
           ec2-user@ec2-18-233-10-163.compute-1.amazonaws.com
 
 

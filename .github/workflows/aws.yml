@@ -38,7 +38,10 @@ jobs:
         run: |
           docker build -t djanog_webapp-main:latest .
 
-    
+      #5. docker tag
+      - name: docker tag
+        run: |
+           docker tag djanog_webapp-main:latest 794038243291.dkr.ecr.us-east-1.amazonaws.com/djanog_webapp-main:latest
 
       # 6. Push image to ECR
       - name: Push image to ECR

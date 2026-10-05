@@ -107,6 +107,9 @@ jobs:
 
           docker ps
 
+          docker stop web2
+          docker rm web2
+
           echo "Deployment completed successfully!"
 
           ROOT_EOF
